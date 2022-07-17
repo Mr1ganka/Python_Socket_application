@@ -5,15 +5,11 @@ import threading
 import sys
 
 
-# PORT=5000
-# SERVER='127.0.0.1'
-
 SERVER=socket.gethostbyname(socket.gethostname())
 PORT=5050
 # ADDR=(SERVER,PORT)
 HEADER=64
 FORMAT='utf-8'
-# SET=True
 connection=True
 
 DISCONN ="!DISCONNECT"
@@ -26,26 +22,24 @@ ADDR=(SERVER,PORT)
 client=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 client.connect(ADDR)
 
-def send(msg):
+def send(msg):                          #sending the message to the server
     message = msg.encode(FORMAT)
     msg_length=len(message)
     send_length = str(msg_length).encode(FORMAT)
     send_length +=b' '*(HEADER-len(send_length))
     client.send(send_length)
     client.send(message)
-    # if client.recv(2048):
-    # print(client.recv(2048).decode(FORMAT))
 
-def recievemsg():
+def recievemsg():                   #function which prints the recieving messages
     while connection:
         print(client.recv(2048).decode(FORMAT))
     sys.exit()
 
-newthread=threading.Thread(target=recievemsg)
+newthread=threading.Thread(target=recievemsg)       #creating a separate thread for the messages so that no message is intureppted in the middle
 newthread.start()
 
 
-while connection:
+while connection:   
     
     message=input("enter your message here: ")
     if message.upper()==DISCONN:
